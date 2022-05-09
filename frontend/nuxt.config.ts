@@ -14,5 +14,8 @@ export default defineNuxtConfig({
       },
     },
   },
+  generate: {
+    routes: ["/login"],
+  },
   css: ["~/assets/css/tailwind.css"],
 });
