@@ -25,7 +25,8 @@ class AuthMutation(graphene.ObjectType):
     refresh_token = mutations.RefreshToken.Field()
     revoke_token = mutations.RevokeToken.Field()
 
-class Query(UserQuery, MeQuery, graphene.ObjectType):
+# class Query(UserQuery, MeQuery, graphene.ObjectType):
+class Query(MeQuery, graphene.ObjectType):
     pass
 
 class Mutation(AuthMutation, graphene.ObjectType):
