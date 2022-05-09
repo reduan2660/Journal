@@ -1,5 +1,6 @@
 from django.urls import path
 from graphene_django.views import GraphQLView
+from graphql_jwt.decorators import jwt_cookie
 from users.schema import schema
 from django.views.decorators.csrf import csrf_exempt
 
@@ -11,5 +12,5 @@ DEBUG = bool(os.getenv('DEBUG', 'False').lower() in ('true', '1', 't', 'True'))
 
 urlpatterns = [
     # Only a single URL to access GraphQL
-    path("me", csrf_exempt(GraphQLView.as_view(graphiql=DEBUG, schema=schema))),
+    path("me", jwt_cookie(GraphQLView.as_view(graphiql=DEBUG, schema=schema))),
 ]
