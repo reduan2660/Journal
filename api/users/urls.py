@@ -12,5 +12,6 @@ DEBUG = bool(os.getenv('DEBUG', 'False').lower() in ('true', '1', 't', 'True'))
 
 urlpatterns = [
     # Only a single URL to access GraphQL
-    path("me", jwt_cookie(GraphQLView.as_view(graphiql=DEBUG, schema=schema))),
+    # path("me", jwt_cookie(GraphQLView.as_view(graphiql=True, schema=schema))),
+    path("me", jwt_cookie(csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema)))),
 ]

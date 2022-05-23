@@ -19,8 +19,9 @@ SECRET_KEY = os.getenv('JWTSECRET')
 DEBUG = bool(os.getenv('DEBUG', 'False').lower() in ('true', '1', 't', 'True'))
 DEV = bool(os.getenv('DEV', 'False').lower() in ('true', '1', 't', 'True'))
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost","103.80.0.203", "192.168.0.1", "192.168.0.100", "alvereduan.me", "api.journal.alvereduan.me", "journal.alvereduan.me"]
-
+# ALLOWED_HOSTS = ["127.0.0.1", "localhost","103.80.0.203", "192.168.0.1", "192.168.0.100", "alvereduan.me", "api.journal.alvereduan.me", "journal.alvereduan.me"]
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -32,6 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', # Required for GraphiQL
     "users",
+    # ...
+    'corsheaders',
     # ...
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig', # refresh tokens are optional
@@ -45,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

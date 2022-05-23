@@ -18,4 +18,12 @@ export default defineNuxtConfig({
     routes: ["/login"],
   },
   css: ["~/assets/css/tailwind.css"],
+
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: "https://api.covidtracking.com/",
+    },
+  },
+
+  modules: [["@nuxtjs/axios", { proxyHeaders: false }], "@nuxtjs/proxy"],
 });

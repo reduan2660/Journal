@@ -62,3 +62,17 @@
     </div>
   </NuxtLayout>
 </template>
+
+<script setup>
+import axios from "axios";
+axios.get("https://api.covidtracking.com/v1/us/daily.json").then((response) => {
+  console.log(response.data);
+});
+
+// log(config)
+
+// const { data: data } = await useFetch(
+//   "https://api.covidtracking.com/v1/us/daily.json"
+// );
+// console.log(data.value);
+</script>
