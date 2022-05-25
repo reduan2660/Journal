@@ -37,7 +37,6 @@ class Query(MeQuery, graphene.ObjectType):
     pass
 
 class Mutation(AuthMutation, graphene.ObjectType):
-    
     pass
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
