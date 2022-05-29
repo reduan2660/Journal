@@ -22,6 +22,7 @@ DEV = bool(os.getenv('DEV', 'False').lower() in ('true', '1', 't', 'True'))
 # ALLOWED_HOSTS = ["127.0.0.1", "localhost","103.80.0.203", "192.168.0.1", "192.168.0.100", "alvereduan.me", "api.journal.alvereduan.me", "journal.alvereduan.me"]
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 

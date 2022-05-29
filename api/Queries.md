@@ -2,11 +2,11 @@
 
 ```graphql
 query {
-  blogs {
+  blogs(first: 2, skip: 0, search: "content") {
     id
+    title
     content
-    created
-    updated
+    published
   }
 }
 ```
