@@ -1,3 +1,92 @@
+## Users
+
+> Register User
+
+```graphql
+mutation {
+  register(
+    email: "alve@gmail.com"
+    password1: "!mnbvcxz123"
+    password2: "!mnbvcxz123"
+    username: "red"
+  ) {
+    success
+    errors
+    token
+    refreshToken
+  }
+}
+```
+
+> Login
+
+```graphql
+mutation {
+  tokenAuth(email: "alve@gmail.com", password: "!mnbvcxz123") {
+    success
+    errors
+    refreshToken
+    token
+  }
+}
+```
+
+> Logout
+
+```graphql
+mutation{
+  deleteRefreshTokenCookie{
+    deleted
+	}
+
+```
+
+> User Query
+
+```graphql
+query {
+  me {
+    username
+    firstName
+    lastName
+    email
+    isActive
+  }
+}
+```
+
+---
+
+## Category
+
+> Create Category
+
+```graphql
+mutation {
+  createCategory(title: "Uncategorized") {
+    category {
+      id
+      title
+    }
+  }
+}
+```
+
+> List Categories
+
+```graphql
+query {
+  categories {
+    id
+    title
+  }
+}
+```
+
+---
+
+## Blogs
+
 > Blogs
 
 ```graphql
@@ -54,7 +143,12 @@ query {
 
 ```graphql
 mutation {
-  createBlog(title: "Another Blog", content: "Blog Content", published: false) {
+  createBlog(
+    title: "Blog 1"
+    content: "Blog Content"
+    category: "1d46b71c-1cae-42d6-b72c-e3be7c6c4100"
+    published: false
+  ) {
     blog {
       id
       content

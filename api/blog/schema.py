@@ -1,3 +1,5 @@
+from statistics import mode
+from unicodedata import category
 import uuid
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
@@ -5,7 +7,7 @@ import graphene
 from graphql_jwt.decorators import login_required
 from django.db.models import Q
 
-from .models import Blog, Comment
+from .models import Blog, Category, Comment
 
 class BlogType(DjangoObjectType):
     class Meta:
@@ -15,6 +17,20 @@ class CommentType(DjangoObjectType):
     class Meta:
         model = Comment 
 
+class CategoryType(DjangoObjectType):
+    class Meta:
+        model = Category
+
+class CreateCategory(graphene.Mutation):
+    category = graphene.Field(CategoryType)
+
+    class Arguments:
+        title = graphene.String()
+    
+    def mutate(self, info, title):
+        cat = Category(title=title)
+        cat.save()
+        return CreateCategory(category=cat)
 
 class CreateBlog(graphene.Mutation):
     blog = graphene.Field(BlogType)
@@ -22,12 +38,21 @@ class CreateBlog(graphene.Mutation):
     class Arguments:
         title = graphene.String()
         content = graphene.String()
+        category = graphene.String()
         published = graphene.Boolean()
 
     @login_required
-    def mutate(self, info, title, content, published):
+    def mutate(self, info, title, content, category, published):
+        if info.context.user.is_active == False:
+            raise GraphQLError('Your id has been deactivated!')
+        
+        print("Is Author", info.context.user.author )
+        if info.context.user.author == False:
+            raise GraphQLError('You are not an author')
+
         author = info.context.user
-        b = Blog(title=title, content=content, published=published, author=author)
+        category = Category.objects.get(id=uuid.UUID(category))
+        b = Blog(title=title, content=content, category=category, published=published, author=author)
         b.save()
         return CreateBlog(blog=b)
 
@@ -51,7 +76,6 @@ class EditBlog(graphene.Mutation):
 
         return EditBlog(blog=b)
 
-
 class PublishBlog(graphene.Mutation):
     blog = graphene.Field(BlogType)
 
@@ -72,7 +96,6 @@ class PublishBlog(graphene.Mutation):
             return PublishBlog(blog=b)
         else:
             raise GraphQLError('You are not author!')
-
 
 class CreateComment(graphene.Mutation):
     comment = graphene.Field(CommentType)
@@ -114,7 +137,7 @@ class Mutation(graphene.ObjectType):
     edit_blog = EditBlog.Field()
     publish_blog = PublishBlog.Field()
     create_comment = CreateComment.Field()
-
+    create_category = CreateCategory.Field()
 
 class Query(graphene.ObjectType):
     blogs = graphene.List(
@@ -125,6 +148,7 @@ class Query(graphene.ObjectType):
     )
     blog_by_id = graphene.List(BlogType, id=graphene.String())
     comments_by_blog = graphene.List(CommentType, blog=graphene.String())
+    categories = graphene.List(CategoryType)
 
     # Returns published blogs
     def resolve_blogs(self, info, search=None, first=None, skip=None, **kwargs):
@@ -154,5 +178,8 @@ class Query(graphene.ObjectType):
     def resolve_comments_by_blog(self, info, blog):
         return Comment.objects.filter(blog=uuid.UUID(blog)).filter(approved=True)
 
+    def resolve_categories(self, info):
+        categoriesToReturn = Category.objects.all()
+        return categoriesToReturn
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
